@@ -1,0 +1,33 @@
+
+/* ATENCION: Guardar únicamente estilos generales (body, grid y tipografia) */
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    "gastos resultados"
+    "ingresos estadisticas";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  height: 100vh;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+h1 {
+  color: blue;
+  font-size: 2em;
+  text-align: center;
+}
+
+.cuadrante {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f8f8f8;
+}
+

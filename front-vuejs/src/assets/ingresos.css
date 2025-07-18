@@ -1,0 +1,48 @@
+#ingresos {
+    background-color: #f8e3fd; /* Rosa clarito */
+    padding: 20px;
+    border-radius: 8px;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+/* Contenedor para los radios con etiquetas */
+.radio-group-2 {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+/* Esconde el radio original */
+.radio-group-2 input[type="radio"] {
+  display: none;
+}
+
+
+/* ESTILOS PARA LOS INPUT TYPE RADIOS */
+
+/* Estilo para las etiquetas que actúan como botón */
+.radio-group-2 label {
+  padding: 0.5rem 1.2rem;
+  border: 2px solid #777;
+  border-radius: 25px;
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  color: #555;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+/* Cuando el radio está seleccionado, estilizamos la etiqueta */
+.radio-group-2 input[type="radio"]:checked + label {
+  background-color: #4CAF50;  /* Verde */
+  border-color: #4CAF50;
+  color: white;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.6);
+}
+
+/* Efecto hover para etiquetas */
+.radio-group-2 label:hover {
+  border-color: #4CAF50;
+  color: #4CAF50;
+}

@@ -1,0 +1,35 @@
+# -----------------------------------------------------------------------------
+# Environment (dev, test, prod)
+environment: dev
+
+# -----------------------------------------------------------------------------
+# App 
+system_id: fisca-infraestructura
+service_id: service_id
+app_id: api-factory
+app_description: Factory para desarrollo de APIs
+
+# -----------------------------------------------------------------------------
+# URL del Front, al autenticar se redirige alli
+app_fe_url: http://localhost:8080/
+
+# -----------------------------------------------------------------------------
+# Si está habilitado, calcula el tiempo que demora cada petición 
+# agrega el X-Process-Time header en el response
+request_timer_enabled: True
+
+# -----------------------------------------------------------------------------
+proxy: http://proxy.samba.afip.gob.ar:80/
+
+# -------------------------------------------------------------------------------------
+# Permite paramterizar el path base de las rutas de negocio, seguridad y monitoreo.
+# Se sugiere dejar los configurados (se permite su modificación para versiones anteriores de la API).
+# Tener distintos path base permite mayor flexibilidad de configuración del nginx/apache.
+api_base_path: "/api"
+security_base_path: "/security"
+monitoring_base_path: "/monitoring"
+
+# -----------------------------------------------------------------------------
+# Habilita la recolección de métricas para prometheus y los endpoints /metrics y /metrics/health
+prometheus_metrics_enabled: True
+prometheus_exempted_paths: ['/docs', '/openapi.json', '/favicon']

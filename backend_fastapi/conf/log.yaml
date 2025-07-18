@@ -1,0 +1,91 @@
+version: 1
+
+formatters:
+  afip:
+    # datefmt: "%Y-%m-%dT%H:%M:%SZ"
+    format: '%(asctime)s %(levelname)-8s [%(filename)s.%(funcName)s(%(lineno)d)] [%(name)s] %(message)s'
+    # https://gitlab.cloudint.afip.gob.ar/applogs/applogs-doc/-/blob/master/doc/grok_patrones.md
+    # Patrón 1
+
+
+handlers:
+   # handler a consola stdout
+  console:
+    class: logging.StreamHandler
+    formatter: afip
+    stream: ext://sys.stdout
+    level: DEBUG
+  #  handler a archivo
+  # file:
+  #   class: logging.handlers.TimedRotatingFileHandler
+  #   filename: "logs/app.log"
+  #   formatter: afip
+  #   when: "midnight"
+  #   interval: 1
+  #   backupCount: 5
+
+loggers:
+  pyapiafip:
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+  uvicorn.access:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  uvicorn:
+    level: INFO
+    handlers: [console]
+    propagate: no
+  requests:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  urllib3:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  httpx:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  httpcore:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  elasticsearch:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  boto3:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  botocore:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  s3transfer:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  multipart:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  python_multipart:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  sqlalchemy:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+  sqlalchemy.engine.Engine:
+    level: ERROR
+    handlers: [console]
+    propagate: no
+
+root:
+  level: DEBUG
+  handlers: [console]

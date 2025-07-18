@@ -1,0 +1,41 @@
+#auth_type: [JWT]
+auth_type: []
+
+
+auth_secret_key: "secret_lucymar"
+
+auth_timeout: 28800
+# Umbral de refresh del token en segundos (si no se supera, se puede solicitar 
+# token jwt de nuevo). Si se supera, debe volver a loguearse.
+auth_refresh_timeout: 60
+# auth_payload_origin indica si el payload del token debe incluir el origen (ip)
+auth_payload_origin: True
+
+validate_token_sign: False
+
+# Clave publica para validar el token/sign
+app_cert_file: "certs/public.pem"
+
+# ------------------------------------------------------------------------------
+# origins_enabled: True, valida que quien accede a la API está habilitado 
+# para hacerlo verificando el Header referer.
+# origins_allowed: lista de host validos, ej ['https://host-k8s.dqs.afip.gob.ar', 'http://localhost']
+# origins_exempted_paths: paths que no se evalúan, ej ['/v1.0/route_a', '/v1.0/route_b']
+# -----------------------------------------------------------------------------
+origins_enabled: False
+origins_allowed: ['http://localhost']
+origins_exempted_paths: []
+
+# -----------------------------------------------------------------------------
+# Configuración de límite de peticiones por IP cliente (rate_limit_max)
+# permitidas durante un periodo (rate_limit_time)
+# rate_limit_max: maxima cantidad de peticiones en rate_limit_time
+# rate_limit_time: tiempo en que evaluar la cantidad máxima de peticiones permitidas (rate_limit_max)
+# rate_limit_exempted_paths: paths que no se evalúan, ej ['/v1.0/route_a', '/v1.0/route_b']
+rate_limit_enabled: False
+rate_limit_max: 100
+rate_limit_time: 3600
+rate_limit_exempted_paths: []
+
+nonce_secret_key: "py-api-factory_Secret-Nonce-Key"
+nonce_timeout: 5
