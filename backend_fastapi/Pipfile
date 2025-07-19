@@ -2,24 +2,16 @@
 install_search_all_sources = true
 
 [[source]]
-url = "https://nexus.cloudint.afip.gob.ar/nexus/repository/pypi-proxy/simple"
-verify_ssl = false
-name = "pypi-proxy"
-
-[[source]]
-url = "https://nexus.cloudint.afip.gob.ar/nexus/repository/fisca-infraestructura-pypi/simple"
-verify_ssl = false
-name = "fisca"
-
-[[source]]
-url = "https://nexus.cloudint.afip.gob.ar/nexus/repository/sandbox-pypi/simple"
-verify_ssl = false
-name = "sandbox"
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
 
 [packages]
-flask = "*"
+requests = "*"
+fastapi = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.12"
