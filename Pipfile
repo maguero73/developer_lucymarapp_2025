@@ -1,11 +1,14 @@
 [[source]]
-url = "https://nexus.cloudint.afip.gob.ar/nexus/repository/pypi-proxy/simple"
-verify_ssl = false
-name = "pip_conf_index_global"
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
 
 [packages]
+requests = "*"
+fastapi = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.12"
