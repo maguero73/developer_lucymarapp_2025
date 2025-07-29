@@ -10,20 +10,23 @@ from app.endpoints import titulares
 from app.endpoints import tipo_gasto
 from app.routers import gasto_router, ingreso_router, auth_router
 from app.endpoints import tipo_ingreso
-from app.middlewares.audit_middleware_auth import JWTMiddleware
 
 
 from fastapi.security import HTTPBearer
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends
+from fastapi.exceptions import RequestValidationError
+from app.middlewares import error_handler
+from fastapi import HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import status
 
-import pyapiafip as paa
-from app.services import database_service
+
 #from app.helpers import token_preprocess
-from app.routers import auth_router #prueba_mariano
 
 
-app= FastAPI(title="Backend-FastAPI")
+
+app= FastAPI(title="Backend-FastAPI", app = FastAPI(debug=True))
 #app = paa.PyApiAFIP
 
 
@@ -48,13 +51,16 @@ app.include_router(titulares.router, prefix="/api/titulares", tags=["Titulares"]
 app.include_router(tipo_gasto.router, prefix="/api/tipos-gasto", tags=["Tipo Gasto"]) #dependencies=[Depends(bearer_scheme)])
 app.include_router(tipo_ingreso.router, prefix="/api/tipos-ingreso", tags=["tipos_ingreso"])#dependencies=[Depends(bearer_scheme)])
 app.include_router(gasto_router.router, prefix="/api/gastos") #dependencies=[Depends(bearer_scheme)])
-app.include_router(ingreso_router.router, prefix="/api/ingresos")#dependencies=[Depends(bearer_scheme)])
+app.include_router(ingreso_router.router, prefix="/api/ingresos") #dependencies=[Depends(bearer_scheme)])
 #------------------------Auths Login-------------------------------------------
 app.include_router(auth_router.router, prefix="/api")
 
 
 
-# ------------------------- Middlewares --------------------------------------------------------
+# ------------------------- Middlewares error_handler--------------------------------------------------------
+app.add_exception_handler(RequestValidationError, error_handler.validation_exception_handler)
+app.add_exception_handler(HTTPException, error_handler.http_exception_handler)
+app.add_exception_handler(Exception, error_handler.generic_exception_handler)
 
 # -------- CORS (cross origin resource sharing) -----------------------------------
 origins = [

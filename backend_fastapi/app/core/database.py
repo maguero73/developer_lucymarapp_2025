@@ -5,7 +5,7 @@ from sqlalchemy import text
 #URL DE CONEXION
 #DATABASE_URL = "mariadb+mariadbconnector://root:Admin@localhost:3306/lucymar_db"
 #DATABASE_URL= "mysql://root:Dimaria123@localhost:3306/lucymar_db?allowPublicKeyRetrieval=true&useSSL=false"
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:Dimaria123@localhost:3306/lucymar_db"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://lucymar_user:Admin@192.168.0.9:3306/lucymar_db"
 
 
 #CREAR EL MOTOR (engine)
