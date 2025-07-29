@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import solicitudesApi from '../controllers/solicitudes';
+import api from '../helpers/api';
 import type { Titular, TipoGasto, TipoIngreso } from '../models/solicitudes'
 
 export const useSolicitudesStore = defineStore('solicitudes', {
 
-
+    //datos reactivos
     state: () => ({
       titulares: [] as { label: string; value: number }[],
       tiposGasto: [] as { label: string; value: number }[],
@@ -15,6 +16,7 @@ export const useSolicitudesStore = defineStore('solicitudes', {
 
 
     actions: {
+      //llamadas GET
       async fetchTitulares() {
         this.loading = true
         this.error = ''
@@ -65,6 +67,44 @@ export const useSolicitudesStore = defineStore('solicitudes', {
         } finally {
           this.loading = false
         }
-      }
-    }
-  })
+      },
+
+      //llamadas POST
+
+      async guardarGasto(payload: {
+        cod_titular: string,
+        monto: number,
+        cod_moneda: string,
+        cod_tipo_gasto: string,
+        fecha: string
+      }) {
+        try {
+          const response = await api.post('/gastos', payload);
+          console.log('Gasto guardado:', response.data);
+          return response.data;
+        } catch (error) {
+          console.error('Error al guardar el gasto:', error);
+          throw error; // se propaga para manejarlo en el componente si querés
+        }
+
+    },
+
+      async guardarIngreso(payload: {
+        cod_titular: string,
+        monto: number,
+        cod_moneda: string,
+        cod_tipo_ingreso: string,
+        fecha: string
+      }) {
+        try {
+          const response = await api.post('/ingresos', payload);
+          console.log('Gasto guardado:', response.data);
+          return response.data;
+        } catch (error) {
+          console.error('Error al guardar el gasto:', error);
+          throw error; // se propaga para manejarlo en el componente si querés
+        }
+
+         },
+      } 
+    })

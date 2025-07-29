@@ -62,7 +62,7 @@
 import '@/assets/ingresos.css'
 import { reactive, ref, onMounted, watch } from 'vue'
 import api from '@/helpers/api';
-import { useSolicitudesStore } from '@/store/solicitudes'
+import { useSolicitudesStore } from '@/store/useSolicitudesStore'
 
 
 
@@ -88,9 +88,7 @@ const formIngreso = reactive({
 onMounted(async () => {
   try{
       await Promise.all([
-        console.log('🔄 Prueba Mariano carg titulares...'),
         store.fetchTitulares(),
-        console.log('✅ Prueba Mariano Titulares cargados:', titulares.value),
         store.fetchTiposIngreso()
       ]);
 
@@ -147,6 +145,20 @@ const ingreso = {
   fecha_creacion: new Date().toISOString()
 }
 
+
+try {
+    await store.guardarIngreso(ingreso)
+    success.value = 'Ingreso guardado correctamente'
+    alert(success.value)
+    resetIngreso()
+  } catch (err) {
+    console.error('Error al guardar ingreso:', err)
+    error.value = 'Error al guardar ingreso'
+  }
+}
+
+
+/*
 console.log('ingreso que se enviará:', ingreso)
 
 // Enviar a la API
@@ -179,7 +191,7 @@ if (err.response) {
 error.value = 'Error al guardar ingreso'
 }
 
-
+*/
 
 function resetIngreso() {
 formIngreso.cod_titular = null

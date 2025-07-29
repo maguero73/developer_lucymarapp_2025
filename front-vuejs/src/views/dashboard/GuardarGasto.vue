@@ -57,7 +57,7 @@
 -->
 
   <!-- Botón para guardar -->
-  <button type="button" @click="guardarGasto" :disabled="loading">
+  <button type="button" @click="GuardarGasto" :disabled="loading">
   Guardar Gasto
 </button>
 
@@ -68,28 +68,19 @@
 <p v-if="success" class="success">{{ success }}</p>
 <p v-if="error" class="error">{{ error }}</p>
 
-
-
 </div>
 </form>
-
-
-
 </template>
+
 
 
 <script setup>
 import '@/assets/gastos.css'
-import api from '@/helpers/api';
-import { onMounted } from 'vue'
-import { useSolicitudesStore } from '@/store/solicitudes'
-import { ref, reactive } from 'vue'
-
+import { ref, reactive, onMounted } from 'vue'
+import { useSolicitudesStore } from '@/store/useSolicitudesStore'
 
 const store = useSolicitudesStore()
 const loading = ref(true)
-
-
 const error = ref('')
 const success = ref('')
 
@@ -101,101 +92,65 @@ const form = reactive({
   cod_moneda: ''
 })
 
-
-onMounted(async() => {
-  try{
-      await Promise.all([
-          store.fetchTitulares(),
-          store.fetchTiposGasto()
-      ]);
-  }catch (error){
-    console.error('error fetching data', error);
-  }finally{
-    loading.value=false;
-  }  
-});
-
-
-//ACA INICIA LA FUNCION JAVASCRIPT GUARDAR GASTO
+onMounted(async () => {
+  try {
+    await Promise.all([
+      store.fetchTitulares(),
+      store.fetchTiposGasto()
+    ])
+  } catch (err) {
+    console.error('Error al cargar datos iniciales:', err)
+  } finally {
+    loading.value = false
+  }
+})
 
 
-const guardarGasto = async () => {
+//para llamar al POST
 
-success.value = ''
-error.value = ''
+const GuardarGasto = async () => {
+  error.value = ''
+  success.value = ''
 
-// Validaciones iniciales
-if (
-  !form.cod_gasto ||
-  !form.cod_titular ||
-  form.monto === '' ||
-  !form.fecha ||
-  !form.cod_moneda
-) {
-  alert('Por favor, complete todos los campos.')
-  return
-}
-
-// Conversión segura de los campos numéricos
-const cod_gasto = Number(form.cod_gasto)
-const cod_titular = Number(form.cod_titular)
-const monto = parseFloat(form.monto)
-const tipo_cambio = 1200
-
-console.log('form.cod_titular:', form.cod_titular, typeof form.cod_titular)
-console.log('form.cod_gasto:', form.cod_gasto, typeof form.cod_gasto)
-
-if (!form.cod_titular || !form.cod_gasto) {
-  alert('Debe seleccionar un titular y un tipo de gasto.')
-  return
-}
-
-const gasto = {
-  cod_gasto,
-  cod_titular,
-  monto,
-  fecha: new Date(form.fecha).toISOString(),
-  cod_moneda: form.cod_moneda,
-  tipo_cambio,
-  fecha_creacion: new Date().toISOString()
-}
-
-console.log('Gasto que se enviará:', gasto)
-
-// Enviar a la API
-try {
-  
-  console.log('Entrando en guardarGasto')
-  const response = await api.post('/gastos', gasto)
-  success.value = response.data.mensaje || 'Gasto guardado correctamente'
-  alert('Gasto guardado correctamente')
-  
-
-} catch (err) {
-  alert('Error al guardar gasto')
-console.error('Error completo:', err)
-
-// Si es error HTTP con Axios
-if (err.response) {
-  console.log('Código de estado:', err.response.status)
-  console.log('Respuesta del servidor:', err.response.data)
-}
-
-error.value = 'Error al guardar gasto'
-}
+  if (
+    !form.cod_titular ||
+    !form.cod_gasto ||
+    form.monto === '' ||
+    !form.fecha ||
+    !form.cod_moneda
+  ) {
+    alert('Por favor, complete todos los campos.')
+    return
   }
 
+  const gasto = {
+    cod_gasto: Number(form.cod_gasto),
+    cod_titular: Number(form.cod_titular),
+    monto: parseFloat(form.monto),
+    fecha: new Date(form.fecha).toISOString(),
+    cod_moneda: form.cod_moneda,
+    tipo_cambio: 1200,
+    fecha_creacion: new Date().toISOString()
+  }
 
-function resetGasto() {
-form.cod_titular = null
-form.cod_gasto = null
-form.monto = 0
-form.fecha = ''
-form.cod_moneda = ''
-form.tipo_cambio = ''
-
-success.value = ''
-error.value = ''
+  try {
+    await store.guardarGasto(gasto)
+    success.value = 'Gasto guardado correctamente'
+    alert(success.value)
+    resetGasto()
+  } catch (err) {
+    console.error('Error al guardar gasto:', err)
+    error.value = 'Error al guardar gasto'
+  }
 }
 
+function resetGasto() {
+  form.cod_titular = ''
+  form.cod_gasto = ''
+  form.monto = ''
+  form.fecha = ''
+  form.cod_moneda = ''
+  success.value = ''
+  error.value = ''
+}
 </script>

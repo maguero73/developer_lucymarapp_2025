@@ -4,14 +4,14 @@ export interface Titular {
     nombre: string
   }
   
-  // Tipo de Gasto
-  export interface TipoGasto {
+// Tipo de Gasto
+export interface TipoGasto {
     codigo: number
     descripcion: string
   }
   
   // Tipo de Ingreso
-  export interface TipoIngreso {
+export interface TipoIngreso {
     codigo: number
     descripcion: string
   }
