@@ -78,6 +78,7 @@
 import '@/assets/gastos.css'
 import { ref, reactive, onMounted } from 'vue'
 import { useSolicitudesStore } from '@/store/useSolicitudesStore'
+import { guardarGasto } from '@/controllers/solicitudes'
 
 const store = useSolicitudesStore()
 const loading = ref(true)
@@ -134,7 +135,7 @@ const GuardarGasto = async () => {
   }
 
   try {
-    await store.guardarGasto(gasto)
+    await guardarGasto(gasto)
     success.value = 'Gasto guardado correctamente'
     alert(success.value)
     resetGasto()
