@@ -3,12 +3,14 @@ import traceback
 from contextlib import asynccontextmanager
 
 
+from app.curso_python.geometria import area_circulo, perimetro_circulo
+
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.endpoints import titulares
 from app.endpoints import tipo_gasto
-from app.routers import gasto_router, ingreso_router, auth_router
+from app.routers import gasto_router, ingreso_router, auth_router, consolidado_gastos
 from app.endpoints import tipo_ingreso
 from app.middlewares.audit_middleware_auth import JWTMiddleware
 
@@ -49,6 +51,7 @@ app.include_router(tipo_gasto.router, prefix="/api/tipos-gasto", tags=["Tipo Gas
 app.include_router(tipo_ingreso.router, prefix="/api/tipos-ingreso", tags=["tipos_ingreso"])#dependencies=[Depends(bearer_scheme)])
 app.include_router(gasto_router.router, prefix="/api/gastos") #dependencies=[Depends(bearer_scheme)])
 app.include_router(ingreso_router.router, prefix="/api/ingresos")#dependencies=[Depends(bearer_scheme)])
+app.include_router(consolidado_gastos.router)
 #------------------------Auths Login-------------------------------------------
 app.include_router(auth_router.router, prefix="/api")
 
@@ -63,8 +66,13 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,   # O "*" si estas probando
+    allow_origins=["*"],   # O "*" si estas probando
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+
+print(area_circulo(3))
+print(perimetro_circulo(3))

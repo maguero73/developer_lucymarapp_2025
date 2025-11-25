@@ -1,0 +1,17 @@
+#para el backend: en este path: /home/20310607992@samba.afip.gob.ar/Backup/DATOS/gitlab/mi_proyecto_python
+
+#ejecutar:
+
+#sudo docker compose up -d
+
+
+#se deben abrir 2 instancias docker:
+
+#   [+] Running 2/2
+#    ✔ Container phpmyadmin         Started
+#   ✔ Container mysql-container-2  Started
+
+
+#con esto ya tenes PhpMyadmin y Mysql abierto en puerto 3306 local
+
+

@@ -14,7 +14,7 @@ class LMGasto(Base):
     cod_titular = Column(Integer)   
     monto = Column(Float)
     fecha = Column(DateTime)
-    cod_moneda =Column(String(3))
+    codigo_moneda =Column(String(3))
     tipo_cambio =Column(Float)
     fecha_creacion = Column(
     DateTime,
