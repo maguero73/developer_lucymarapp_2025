@@ -1,139 +1,4 @@
 
-<script setup>
-
-import '@/assets/gastos.css'
-import { ref, reactive, onMounted, watch } from 'vue'
-import api from '@/helpers/api';
-
-const titulares = ref([])
-const tipos_gasto = ref([]) 
-
-const error = ref('')
-const success = ref('')
-
-const form = reactive({
-  cod_titular: '',
-  cod_gasto: '',
-  monto: '',
-  fecha: '',
-  cod_moneda: ''
-})
-
-const loading = ref(true)
-
-onMounted(async () => {
-  console.log('Montado: fetch titulares y tipos de gasto')
-  try {
-    const [res1, res2] = await Promise.all([
-
-    api.get('/titulares'),
-    api.get('/tipos-gasto')
-    ])
-
-    const data1 = res1.data
-    const data2 = res2.data
-
-    console.log('Titulares recibidos:', data1)
-    console.log('Tipos de gasto recibidos:', data2)
-
-    titulares.value = data1
-    tipos_gasto.value = data2
-
-  } catch (err) {
-    console.error('Error al cargar datos:', err)
-    error.value = 'Error al cargar datos'
-  } finally {
-    loading.value = false
-  }
-})
-
-
-//ACA INICIA LA FUNCION JAVASCRIPT GUARDAR GASTO
-
-
-const guardarGasto = async () => {
-
-  success.value = ''
-  error.value = ''
-
-  // Validaciones iniciales
-  if (
-    !form.cod_gasto ||
-    !form.cod_titular ||
-    form.monto === '' ||
-    !form.fecha ||
-    !form.cod_moneda
-  ) {
-    alert('Por favor, complete todos los campos.')
-    return
-  }
-
-  // Conversión segura de los campos numéricos
-  const cod_gasto = Number(form.cod_gasto)
-  const cod_titular = Number(form.cod_titular)
-  const monto = parseFloat(form.monto)
-  const tipo_cambio = 1200
-
-  console.log('form.cod_titular:', form.cod_titular, typeof form.cod_titular)
-  console.log('form.cod_gasto:', form.cod_gasto, typeof form.cod_gasto)
-
-  if (!form.cod_titular || !form.cod_gasto) {
-    alert('Debe seleccionar un titular y un tipo de gasto.')
-    return
-  }
-
-  const gasto = {
-    cod_gasto,
-    cod_titular,
-    monto,
-    fecha: new Date(form.fecha).toISOString(),
-    cod_moneda: form.cod_moneda,
-    tipo_cambio,
-    fecha_creacion: new Date().toISOString()
-  }
-
-  console.log('Gasto que se enviará:', gasto)
-
-  // Enviar a la API
-  try {
-    
-    console.log('Entrando en guardarGasto')
-    const response = await api.post('/gastos', gasto)
-    success.value = response.data.mensaje || 'Gasto guardado correctamente'
-    alert('Gasto guardado correctamente')
-    
-
-  } catch (err) {
-    alert('Error al guardar gasto')
-  console.error('Error completo:', err)
-
-  // Si es error HTTP con Axios
-  if (err.response) {
-    console.log('Código de estado:', err.response.status)
-    console.log('Respuesta del servidor:', err.response.data)
-  }
-
-  error.value = 'Error al guardar gasto'
-}
-}
-
-
-function resetGasto() {
-  form.cod_titular = null
-  form.cod_gasto = null
-  form.monto = 0
-  form.fecha = ''
-  form.cod_moneda = ''
-  form.tipo_cambio = ''
-
-  success.value = ''
-  error.value = ''
-}
-
-</script>
-
-
-
 
 <template>
   <form>
@@ -180,10 +45,10 @@ function resetGasto() {
   <!-- Input para el radio button tipo_moneda --> 
 
   <div class="radio-group">
-  <input type="radio" id="ARS" name="moneda" value="ARS" v-model="form.cod_moneda" />
+  <input type="radio" id="ARS" name="moneda" value="ARS" v-model="form.codigo_moneda" />
   <label for="ARS">Pesos</label>
 
-  <input type="radio" id="USD" name="moneda" value="USD" v-model="form.cod_moneda" />
+  <input type="radio" id="USD" name="moneda" value="USD" v-model="form.codigo_moneda" />
   <label for="USD">Dólares</label>
 </div>
 
@@ -219,3 +84,142 @@ function resetGasto() {
 
 
 </template>
+
+
+
+
+
+<script setup>
+
+import '@/assets/gastos.css'
+import { ref, reactive, onMounted, watch } from 'vue'
+import api from '@/helpers/api';
+
+const titulares = ref([])
+const tipos_gasto = ref([]) 
+
+const error = ref('')
+const success = ref('')
+
+const form = reactive({
+  cod_titular: '',
+  cod_gasto: '',
+  monto: '',
+  fecha: '',
+  codigo_moneda: ''
+})
+
+const loading = ref(true)
+
+onMounted(async () => {
+  console.log('Montado: fetch titulares y tipos de gasto')
+  try {
+    const [res1, res2] = await Promise.all([
+
+    api.get('/titulares'),
+    api.get('/tipos-gasto')
+    ])
+
+    const data1 = res1.data
+    const data2 = res2.data
+
+    console.log('Titulares recibidos:', data1)
+    console.log('Tipos de gasto recibidos:', data2)
+
+    titulares.value = data1
+    tipos_gasto.value = data2
+
+  } catch (err) {
+    console.error('Error al cargar datos:', err)
+    error.value = 'Error al cargar datos'
+  } finally {
+    loading.value = false
+  }
+})
+
+
+//ACA INICIA LA FUNCION JAVASCRIPT GUARDAR GASTO (POST)
+
+
+const guardarGasto = async () => {
+
+  success.value = ''
+  error.value = ''
+
+  // Validaciones iniciales
+  if (
+    !form.cod_gasto ||
+    !form.cod_titular ||
+    form.monto === '' ||
+    !form.fecha ||
+    !form.codigo_moneda
+  ) {
+    alert('Por favor, complete todos los campos.')
+    return
+  }
+
+  // Conversión segura de los campos numéricos
+  const cod_gasto = Number(form.cod_gasto)
+  const cod_titular = Number(form.cod_titular)
+  const monto = parseFloat(form.monto)
+  const tipo_cambio = 1200
+
+  console.log('form.cod_titular:', form.cod_titular, typeof form.cod_titular)
+  console.log('form.cod_gasto:', form.cod_gasto, typeof form.cod_gasto)
+
+  if (!form.cod_titular || !form.cod_gasto) {
+    alert('Debe seleccionar un titular y un tipo de gasto.')
+    return
+  }
+
+  const gasto = {
+    cod_gasto,
+    cod_titular,
+    monto,
+    fecha: new Date(form.fecha).toISOString(),
+    codigo_moneda: form.codigo_moneda,
+    tipo_cambio,
+    fecha_creacion: new Date().toISOString()
+  }
+
+  console.log('Gasto que se enviará:', gasto)
+
+  // Enviar a la API
+  try {
+    
+    console.log('Entrando en guardarGasto')
+    const response = await api.post('/gastos', gasto)
+    success.value = response.data.mensaje || 'Gasto guardado con éxito'
+    alert('Gasto guardado con éxito')
+    
+
+  } catch (err) {
+    alert('Error al guardar gasto')
+  console.error('Error completo:', err)
+
+  // Si es error HTTP con Axios
+  if (err.response) {
+    console.log('Código de estado:', err.response.status)
+    console.log('Respuesta del servidor:', err.response.data)
+  }
+
+  error.value = 'Error al guardar gasto'
+}
+}
+
+
+function resetGasto() {
+  form.cod_titular = null
+  form.cod_gasto = null
+  form.monto = 0
+  form.fecha = ''
+  form.codigo_moneda = ''
+  form.tipo_cambio = ''
+
+  success.value = ''
+  error.value = ''
+}
+
+</script>
+
+
