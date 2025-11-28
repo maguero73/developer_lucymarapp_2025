@@ -20,7 +20,7 @@ SessionLocal =sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 #BASE PARA DEFINIR TUS MODELOS ORM
 
-Base = declarative_base()
+DBBase = declarative_base()
 
 
 

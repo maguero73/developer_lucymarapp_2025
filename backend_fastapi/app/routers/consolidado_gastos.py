@@ -21,7 +21,9 @@ def get_db():
     finally:
         db.close()
 
-# --- MODELO DE ENTRADA ---
+
+
+# ----- MODELO DE ENTRADA -----
 class FiltroConsolidado(BaseModel):
     fecha_desde: date
     fecha_hasta: date
@@ -61,7 +63,7 @@ async def cargar_matriz_base(db) -> List[List[Any]]:
 # --- FUNCIÓN 2: aplica filtros y consolida ---
 async def filtrar_matriz(matriz_base: list[list[Any]], filtros: FiltroConsolidado) -> list[list[Any]]:
     """
-    Aplica filtros sobre la matriz base y devuelve una nueva matriz consolidada.
+    Aplica filtros sobre la matriz base y devuelve una nueva matriz consolidada (filtrada)
     """
     
     matriz_filtrada = []
@@ -70,9 +72,9 @@ async def filtrar_matriz(matriz_base: list[list[Any]], filtros: FiltroConsolidad
         cod_titular, cod_gasto, codigo_moneda, monto, fecha=fila 
 
         # Filtros
-        if filtros.cod_titular and filtros.cod_titular != cod_titular:
+        if filtros.cod_titular and cod_titular not in filtros.cod_titular:
             continue
-        if filtros.cod_gasto and filtros.cod_gasto != cod_gasto:
+        if filtros.cod_gasto and cod_gasto not in filtros.cod_gasto:
             continue
         if filtros.codigo_moneda and filtros.codigo_moneda != codigo_moneda:
             continue

@@ -1,12 +1,12 @@
 from sqlalchemy import Column, Integer, Numeric, DateTime, String, Float
-from app.core.database import Base
+from app.core.database import DBBase
 from datetime import datetime, timedelta, timezone
 
 ARG_TZ = timezone(timedelta(hours=-3))  # UTC-3 Argentina
 
 
 
-class LMIngreso(Base):
+class DBLMIngreso(DBBase):
     __tablename__ = "lm_ingresos"
 
     id = Column(Integer, primary_key=True, index=True)

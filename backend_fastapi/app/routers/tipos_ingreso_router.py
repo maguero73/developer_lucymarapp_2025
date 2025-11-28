@@ -1,0 +1,26 @@
+from fastapi import APIRouter, Request, Depends
+from sqlalchemy.orm import Session
+from app.core.database import SessionLocal
+from app.dbmodels import db_lm_tipo_ingreso
+from typing import List
+
+router = APIRouter()
+
+def get_db():
+    db =SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@router.get("/",responses={
+        200: { "model": List }})
+async def listar_tipos_ingreso(request:Request, offset: int = 0, limit: int = 1000, session: Session = Depends (get_db)):
+    try:
+        
+        return db_lm_tipo_ingreso.get_tipos_ingreso(session=session, offset=offset, limit=limit)
+    
+    except Exception as e:
+        print("🔥 ERROR detectado:", e)
+        import traceback
+        traceback.print_exc()

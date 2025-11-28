@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
+from typing import Optional
 from app.core.database import SessionLocal
-from app.models.lm_ingresos import LMIngreso
-from app.schemas.ingreso_Model import IngresoIn
+from app.dbmodels.db_lm_ingreso import DBLMIngreso
 from datetime import datetime
 import pytz
 
@@ -20,11 +21,24 @@ def get_db():
     finally:
         db.close()
 
+
+# ----- MODELO DE ENTRADA -----
+class IngresoIn(BaseModel):
+    cod_ingreso: int
+    cod_titular: int
+    monto: float
+    fecha: datetime
+    cod_moneda: str
+    tipo_cambio: float
+    fecha_creacion: Optional[datetime] = None  # <- Ahora es opcional
+
+
+
 @router.post("/")
 async def crear_ingreso(ingreso: IngresoIn, db: Session = Depends(get_db)):
     try:
         print("Ingreso recibido:", ingreso)
-        nuevo_ingreso = LMIngreso(
+        nuevo_ingreso = DBLMIngreso(
             cod_ingreso=ingreso.cod_ingreso,
             cod_titular=ingreso.cod_titular,
             monto=ingreso.monto,
