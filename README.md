@@ -2,9 +2,9 @@
 sdk use java 11.0.20
 nvm use 18
 
-#iniciar front en:
+#iniciar front asi !!!!!
 
 #http://localhost:5173/inicio
 
-#login (desactivado JWT)
+#http://localhost:5173/login  (desactivado JWT)
 

@@ -13,7 +13,7 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/",responses={
+@router.get("/api/titulares",responses={
         200: { "model": List }})
 async def listar_titulares(request:Request, offset: int = 0, limit: int = 1000, session: Session = Depends (get_db)):
     try:

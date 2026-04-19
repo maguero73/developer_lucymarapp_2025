@@ -5,14 +5,12 @@ from pydantic import BaseModel
 from app.core.database import SessionLocal
 from sqlalchemy import text
 from typing import Any, List
-from datetime import date
+from datetime import date, datetime
 from typing import Optional
+from app.dbmodels import db_lm_gasto, db_lm_titular
 
 
-router = APIRouter(
-    prefix="/api",
-    tags=["consolidado_gastos"]
-)
+router = APIRouter()
 
 def get_db():
     db = SessionLocal()
@@ -34,74 +32,47 @@ class FiltroConsolidado(BaseModel):
 
 # ---MODELO DE SALIDA ---
 class ResultadosSalida(BaseModel):
-    cod_titular: int
+    titular: str
     cod_gasto: int
     codigo_moneda: str
     monto: float
     fecha: date
 
 
-# --- FUNCIÓN 1: carga matriz base desde BD ---
-async def cargar_matriz_base(db) -> List[List[Any]]:
-    """
-    Trae todos los registros de gastos sin filtrar.
-    """
-    query = text("""
-        SELECT cod_titular, cod_gasto, codigo_moneda, monto, fecha
-        FROM lm_gastos
-    """)
 
-     # Ejecutar query → devuelve CursorResult
-    result = db.execute(query)  # SIN await
-    filas = result.fetchall()   # 🔹 fetchall() sobre CursorResult, NO sobre lista
-
-    # Convertir a lista de listas
-    matriz_base = [list(row) for row in filas]
-
-    return matriz_base
-
-# --- FUNCIÓN 2: aplica filtros y consolida ---
-async def filtrar_matriz(matriz_base: list[list[Any]], filtros: FiltroConsolidado) -> list[list[Any]]:
-    """
-    Aplica filtros sobre la matriz base y devuelve una nueva matriz consolidada (filtrada)
-    """
-    
-    matriz_filtrada = []
-
-    for fila in matriz_base:
-        cod_titular, cod_gasto, codigo_moneda, monto, fecha=fila 
-
-        # Filtros
-        if filtros.cod_titular and cod_titular not in filtros.cod_titular:
-            continue
-        if filtros.cod_gasto and cod_gasto not in filtros.cod_gasto:
-            continue
-        if filtros.codigo_moneda and filtros.codigo_moneda != codigo_moneda:
-            continue
-        if not (filtros.fecha_desde <= fecha <= filtros.fecha_hasta):
-            continue
-
-        matriz_filtrada.append(fila)
-
-    return matriz_filtrada
-
-
-# --- ENDPOINT FINAL ---
-@router.post("/consolidado_gastos", response_model=List[ResultadosSalida])
+# --- ENDPOINT FINAL OPTIMIZADO ---
+@router.post("/api/consolidado_gastos", response_model=List[ResultadosSalida])
 async def obtener_consolidado(filtros: FiltroConsolidado, db=Depends(get_db)):
-    matriz_base = await cargar_matriz_base(db)
-    matriz_filtrada = await filtrar_matriz(matriz_base, filtros)
-
-    # Convertir cada fila (list) en un objeto ResultadosSalida
-    resultados = [
-        ResultadosSalida(
-            cod_titular=fila[0],
-            cod_gasto=fila[1],
-            codigo_moneda=fila[2],
-            monto=fila[3],
-            fecha=fila[4]
+    """
+    Endpoint optimizado que delega el filtrado a la base de datos usando SQLAlchemy.
+    """
+    try:
+        # Llamamos a la función del modelo que ya aplica los filtros en la query
+        gastos_filtrados = db_lm_gasto.get_gastos_filtrados(
+            session=db,
+            fecha_desde=filtros.fecha_desde,
+            fecha_hasta=filtros.fecha_hasta,
+            cod_titular=filtros.cod_titular,
+            cod_gasto=filtros.cod_gasto,
+            codigo_moneda=filtros.codigo_moneda
         )
-        for fila in matriz_filtrada
-    ]
 
-    return resultados
+        # Mapeamos los resultados al modelo de salida
+        resultados = [
+            ResultadosSalida(
+                titular=db_lm_titular.get_descripcion_titular(db, g.cod_titular),
+                cod_gasto=g.cod_gasto,
+                codigo_moneda=g.codigo_moneda,
+                monto=g.monto,
+                fecha=g.fecha.date() if isinstance(g.fecha, datetime) else g.fecha # Manejo seguro de fechas
+            )
+            for g in gastos_filtrados
+        ]
+
+        return resultados
+
+    except Exception as e:
+        print("🔥 ERROR en consolidado_gastos:", e)
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))

@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 #from app.endpoints import titulares
 #from app.endpoints import tipo_gasto
-from app.routers import gasto_router, ingreso_router, auth_router, consolidado_gastos, titulares_router, tipos_gasto_router, tipos_ingreso_router
+from app.routers import gasto_router, ingreso_router, auth_router, consolidado_gastos, titulares_router, tipos_gasto_router, tipos_ingreso_router, reportes_negocio
 #from app.endpoints import tipo_ingreso
 from app.middlewares.audit_middleware_auth import JWTMiddleware
 
@@ -44,14 +44,19 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 #----------------------------Routers----------------------------------------
 
-app.include_router(titulares_router.router, prefix="/api/titulares", tags=["Titulares"]) #dependencies=[Depends(oauth2_scheme)])
-app.include_router(tipos_gasto_router.router, prefix="/api/tipos-gasto", tags=["Tipo Gasto"]) #dependencies=[Depends(bearer_scheme)])
-app.include_router(tipos_ingreso_router.router, prefix="/api/tipos-ingreso", tags=["tipos_ingreso"])#dependencies=[Depends(bearer_scheme)])
-app.include_router(gasto_router.router, prefix="/api/gastos") #dependencies=[Depends(bearer_scheme)])
-app.include_router(ingreso_router.router, prefix="/api/ingresos")#dependencies=[Depends(bearer_scheme)])
-app.include_router(consolidado_gastos.router)
+app.include_router(titulares_router.router, tags=["Titulares"]) #dependencies=[Depends(oauth2_scheme)])
+app.include_router(gasto_router.router, tags=["Gastos"]) #dependencies=[Depends(bearer_scheme)])
+app.include_router(tipos_gasto_router.router, tags=["Gastos"]) #dependencies=[Depends(bearer_scheme)])
+app.include_router(ingreso_router.router, tags=["Ingresos"])#dependencies=[Depends(bearer_scheme)])
+app.include_router(tipos_ingreso_router.router, tags=["Ingresos"])#dependencies=[Depends(bearer_scheme)])
+app.include_router(consolidado_gastos.router, tags=["Gastos"])#dependencies=[Depends(bearer_scheme)])
+app.include_router(reportes_negocio.router, tags=["Reportes"])
+
+
 #------------------------Auths Login-------------------------------------------
-app.include_router(auth_router.router, prefix="/api")
+
+app.include_router(auth_router.router, tags=["Auth"])#dependencies=[Depends(bearer_scheme)])
+
 
 
 

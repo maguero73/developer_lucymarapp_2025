@@ -15,5 +15,18 @@ def get_tipos_gasto(session:Session, offset:int = 0, limit: int = 1000):
     return query
 
 #------------------------------------------------------------------------
+def get_descripcion_tipo(session: Session, codigo: int) -> str:
+    """
+    Caso de Uso: Obtener nombre legible
+    Busca un tipo de gasto por ID y devuelve su descripción.
+    Uso de filter + first()
+    """
+    tipo = session.query(DBLMTipoGasto).filter(DBLMTipoGasto.codigo == codigo).first()
+    
+    if tipo:
+        return tipo.descripcion
+    return "Desconocido"
+
+#------------------------------------------------------------------------
 
 

@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from typing import Optional
 from app.core.database import SessionLocal
 from app.dbmodels.db_lm_ingreso import DBLMIngreso
 from datetime import datetime
+from app.dbmodels import db_lm_ingreso
+from typing import List
 import pytz
 
 argentina = pytz.timezone("America/Argentina/Buenos_Aires")
@@ -32,9 +34,21 @@ class IngresoIn(BaseModel):
     tipo_cambio: float
     fecha_creacion: Optional[datetime] = None  # <- Ahora es opcional
 
+#------------------------------------------------------------------------------------
+@router.get ("/api/ingresos",responses={
+        200: { "model": List }})
+async def listar_ingresos(request:Request, offset: int = 0, limit: int = 1000, session: Session = Depends (get_db)):
+    try:
+        return db_lm_ingreso.get_ingresos(session=session, offset=offset, limit=limit)
+    
+    except Exception as e:
+        print("🔥 ERROR detectado:", e)
+        import traceback
+        traceback.print_exc()
 
+#-------------------------------------------------------------------------------------
 
-@router.post("/")
+@router.post("/api/ingresos")
 async def crear_ingreso(ingreso: IngresoIn, db: Session = Depends(get_db)):
     try:
         print("Ingreso recibido:", ingreso)
