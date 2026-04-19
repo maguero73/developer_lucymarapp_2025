@@ -1,7 +1,135 @@
-#estadisticas {
-    background-color: #f1f8e9; /* Verde claro */
-    padding: 20px;
-    border-radius: 8px;
-    height: 100%;
-    box-sizing: border-box;
+.estadisticas-panel {
+  background: #f4f9ff;
+  border-radius: 14px;
+  padding: 16px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #17324d;
+}
+
+.panel-header p {
+  margin: 4px 0 0;
+  color: #3f546a;
+  font-size: 0.95rem;
+}
+
+.report-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tab-button {
+  min-height: 46px;
+  border: 1px solid #bfd6f2;
+  border-radius: 10px;
+  background: #e9f2fe;
+  color: #1e4a73;
+  font-weight: 600;
+  padding: 10px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.tab-button.active {
+  background: #1d6fd6;
+  color: #fff;
+  border-color: #1d6fd6;
+}
+
+.report-card,
+.result-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  border: 1px solid #dce8f7;
+}
+
+.report-card h3,
+.result-card h3 {
+  margin-top: 0;
+}
+
+.report-form {
+  display: grid;
+  gap: 10px;
+}
+
+.report-form-inline {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+}
+
+.report-form label {
+  font-weight: 600;
+  color: #2a4258;
+}
+
+.report-form input {
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid #c6d8ee;
+  padding: 8px 10px;
+  font-size: 1rem;
+}
+
+.report-form button {
+  min-height: 46px;
+  border: none;
+  border-radius: 10px;
+  background: #2b8a3e;
+  color: white;
+  font-weight: 700;
+  padding: 12px 14px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.report-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.message {
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.message.error {
+  background: #ffe5e5;
+  color: #8c1d1d;
+}
+
+.message.success {
+  background: #e5f8ea;
+  color: #1f6d33;
+}
+
+.result-card pre {
+  margin: 0;
+  max-height: 240px;
+  overflow: auto;
+  background: #f8fbff;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+@media (max-width: 1024px) {
+  .report-tabs {
+    grid-template-columns: 1fr;
   }
+
+  .report-form-inline {
+    grid-template-columns: 1fr;
+  }
+}
