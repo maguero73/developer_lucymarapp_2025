@@ -1,9 +1,11 @@
+/// <reference types="vite/client" />
 import axios from 'axios';
 import router from '../router'
 
 // Creamos una instancia
 const api = axios.create({
-  baseURL: 'http://localhost:9000/api',
+  ///baseURL: 'http://localhost:9000/api',
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -22,6 +24,8 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+console.log(import.meta.env)
 
 // Interceptor para manejar errores globales
 api.interceptors.response.use(
@@ -43,5 +47,7 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+
 
 export default api;

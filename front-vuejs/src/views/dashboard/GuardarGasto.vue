@@ -126,8 +126,8 @@ onMounted(async () => {
     console.log('Titulares recibidos:', data1)
     console.log('Tipos de gasto recibidos:', data2)
 
-    titulares.value = data1
-    tipos_gasto.value = data2
+    titulares.value = data1 || []
+    tipos_gasto.value = data2 || []
 
   } catch (err) {
     console.error('Error al cargar datos:', err)

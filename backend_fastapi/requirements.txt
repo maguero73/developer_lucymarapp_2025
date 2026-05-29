@@ -1,17 +1,57 @@
-#para el backend: en este path: /home/20310607992@samba.afip.gob.ar/Backup/DATOS/gitlab/mi_proyecto_python
-
-#ejecutar:
-
-#sudo docker compose up -d
-
-
-#se deben abrir 2 instancias docker:
-
-#   [+] Running 2/2
-#    ✔ Container phpmyadmin         Started
-#   ✔ Container mysql-container-2  Started
-
-
-#con esto ya tenes PhpMyadmin y Mysql abierto en puerto 3306 local
-
-
+annotated-types==0.7.0
+anyio==4.9.0
+app==0.0.1
+boto3==1.39.4
+botocore==1.39.4
+cachetools==6.1.0
+certifi==2025.7.9
+cffi==1.17.1
+click==8.2.1
+cryptography==45.0.5
+distlib==0.4.0
+ecdsa==0.19.1
+elastic-transport==8.17.1
+elasticsearch==9.0.2
+fastapi==0.115.14
+filelock==3.18.0
+greenlet==3.2.3
+h11==0.16.0
+html2text==2025.4.15
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.10
+jmespath==1.0.1
+jose==1.0.0
+Markdown==3.8
+oracledb==3.2.0
+packaging==25.0
+pipenv==2025.0.4
+platformdirs==4.3.8
+prometheus-fastapi-instrumentator==7.1.0
+prometheus_client==0.22.1
+pyasn1==0.6.1
+pycparser==2.22
+pycryptodome==3.19.0
+pydantic==2.11.7
+pydantic_core==2.33.2
+PyJWT==2.10.1
+PyMySQL==1.1.1
+python-dateutil==2.9.0.post0
+python-jose==3.5.0
+python-multipart==0.0.20
+pytz==2025.2
+PyYAML==6.0.2
+rsa==4.9
+s3transfer==0.13.0
+setuptools==80.9.0
+six==1.17.0
+sniffio==1.3.1
+SQLAlchemy==2.0.41
+starlette==0.46.2
+typing-inspection==0.4.1
+typing_extensions==4.14.1
+tzdata==2025.2
+urllib3==2.5.0
+uvicorn==0.35.0
+virtualenv==20.33.1
+watchdog==6.0.0

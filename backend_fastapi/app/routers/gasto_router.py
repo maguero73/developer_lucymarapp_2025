@@ -25,7 +25,7 @@ class GastoIn(BaseModel):
     cod_titular: int
     monto: float
     fecha: datetime
-    codigo_moneda: str
+    codigo_moneda: Optional[str] = None
     tipo_cambio: float
 
 # --- MODELO DE SALIDA
@@ -36,7 +36,7 @@ class GastoOut(BaseModel):
     cod_titular: int
     monto: float    
     fecha: datetime
-    codigo_moneda: str
+    codigo_moneda: Optional[str] = None
     tipo_cambio: float
 
     class Config:

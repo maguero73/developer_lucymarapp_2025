@@ -63,7 +63,7 @@
   
         //Llamada a GET
         try {
-          const response = await fetch(`http://localhost:9000/api/consolidado_gastos${this.anioSeleccionado}`);
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/consolidado_gastos${this.anioSeleccionado}`);
           if (!response.ok) throw new Error("Error en la respuesta del servidor");
           this.resultado = await response.json();
         } catch (error) {
