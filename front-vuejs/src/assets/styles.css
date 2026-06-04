@@ -1,4 +1,3 @@
-
 /* ATENCION: Guardar únicamente estilos generales (body, grid y tipografia) */
 
 body {
@@ -26,26 +25,70 @@ h1 {
 }
 
 .cuadrante {
-  border: 1px solid #ccc;
+  border: 1px solid var(--borde-color);
   padding: 10px;
-  background-color: #f8f8f8;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  transition: background-color 0.4s ease, border-color 0.4s ease;
 }
+
 /*---------------------------------------
 01-06-2026 - Modo Oscuro UI
 
 
-/* 1. Definición de variables */
+/* 1. Definición de variables (Tema Light por defecto) */
 :root {
   --bg-principal: #ffffff;
   --texto-principal: #1a1a1a;
   --borde-color: #cccccc;
+  --card-bg: #f8f8f8;
+  --accent-color: #007bff;
+
+  --input-bg: #ffffff;
+  --input-text: #1a1a1a;
+  --input-border: #cccccc;
+
+  /* Aliases para compatibilidad */
+  --bg-color: var(--bg-principal);
+  --text-color: var(--texto-principal);
+  --card-color: var(--card-bg);
 }
 
-/* 2. Variantes para el modo oscuro */
+/* 2. Variantes de temas */
 [data-theme='dark'] {
   --bg-principal: #121212;
   --texto-principal: #f5f5f5;
   --borde-color: #444444;
+  --card-bg: #1e1e1e;
+  --accent-color: #3700b3;
+
+  --input-bg: #2a2a2a;
+  --input-text: #f5f5f5;
+  --input-border: #555555;
+}
+
+[data-theme='ocean'] {
+  --bg-principal: #001f3f;
+  --texto-principal: #e0f2f1;
+  --borde-color: #0074d9;
+  --card-bg: #003366;
+  --accent-color: #7fdbff;
+
+  --input-bg: #002b55;
+  --input-text: #e0f2f1;
+  --input-border: #005bb7;
+}
+
+[data-theme='forest'] {
+  --bg-principal: #1b3022;
+  --texto-principal: #e8f5e9;
+  --borde-color: #2e7d32;
+  --card-bg: #26402e;
+  --accent-color: #81c784;
+
+  --input-bg: #203627;
+  --input-text: #e8f5e9;
+  --input-border: #25632a;
 }
 
 /* 3. Aplica las variables a tus selectores existentes */
@@ -53,7 +96,41 @@ body {
   background-color: var(--bg-principal);
   color: var(--texto-principal);
   /* Transición suave al cambiar de modo */
-  transition: background-color 0.3s ease, color 0.3s ease; 
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Estilos Globales para Formularios y Tablas */
+input,
+select,
+textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border: 1px solid var(--input-border) !important;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+label,
+h1,
+h2,
+h3,
+h4,
+p {
+  color: var(--texto-principal);
+  transition: color 0.3s ease;
+}
+
+table {
+  color: var(--texto-principal);
+}
+
+th {
+  background-color: var(--card-bg) !important;
+  color: var(--texto-principal) !important;
+  border-bottom: 2px solid var(--borde-color) !important;
+}
+
+td {
+  border-bottom: 1px solid var(--borde-color) !important;
 }
 
 /* Ejemplo de cómo usarlas en tus componentes actuales */
@@ -64,7 +141,10 @@ body {
 
 .app-container {
   position: fixed;
-  top: 20px;     /* Distancia desde el borde superior */
-  right: 20px;   /* Distancia desde el borde derecho */
-  z-index: 1000; /* Asegura que quede por encima de otros elementos */
+  top: 20px;
+  /* Distancia desde el borde superior */
+  right: 20px;
+  /* Distancia desde el borde derecho */
+  z-index: 1000;
+  /* Asegura que quede por encima de otros elementos */
 }
