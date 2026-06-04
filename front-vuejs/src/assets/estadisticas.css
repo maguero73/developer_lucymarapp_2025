@@ -1,7 +1,17 @@
 #estadisticas {
-    background-color: #f1f8e9; /* Verde claro */
-    padding: 20px;
-    border-radius: 8px;
-    height: 100%;
-    box-sizing: border-box;
-  }
+  /* 1. Propiedades estructurales fijas (no cambian con el tema) */
+  padding: 20px;
+  border-radius: 8px;
+  height: 100%;
+  box-sizing: border-box;
+
+  /* 2. Colores reactivos basados en variables de tu tema */
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave al cambiar de tema */
+}
+
+.card {
+  background-color: var(--card-color);
+  transition: background-color 0.3s ease;
+}

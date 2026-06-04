@@ -94,3 +94,13 @@ form button:active{
   border-color: #4CAF50;
   color: #4CAF50;
 }
+
+
+#gastos {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.card {
+    background-color: var(--card-color);
+}

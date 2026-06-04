@@ -5,3 +5,12 @@
     height: 100%;
     box-sizing: border-box;
   }
+
+  #resultados {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.card {
+    background-color: var(--card-color);
+}

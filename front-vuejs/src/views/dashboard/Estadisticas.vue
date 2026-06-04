@@ -1,7 +1,7 @@
 <template>
     <div class="cuadrante" id="estadisticas">
       <h2>Estadísticas</h2>
-      <h2 class="text-center mb-4 text-primary">📊 Estadísticas de Gastos</h2>
+      <h2 class="text-center mb-4 text-primary">Estadísticas de Gastos</h2>
   
       <div class="text-center mb-3">
         <select v-model="anioSeleccionado" class="form-select w-auto d-inline-block me-2">
@@ -21,7 +21,7 @@
       <transition name="fade">
         <div v-if="resultado !== null" class="card shadow p-4 mt-4">
           <h4 class="text-center mb-3 text-secondary">
-            Total acumulado hasta Diciembre inclusive de {{ anioSeleccionado }} 💰
+            Total acumulado hasta Diciembre inclusive de {{ anioSeleccionado }}
           </h4>
   
           <div class="table-responsive">
@@ -45,6 +45,8 @@
   </template>
   
   <script>
+
+  import '@/assets/estadisticas.css'
   export default {
     name: "Estadistica",
     data() {
@@ -77,10 +79,3 @@
     },
   };
   </script>
-  
-<style scoped>
-  .estadisticas {
-    padding: 10px;
-  }
-</style>
-  

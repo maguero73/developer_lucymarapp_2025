@@ -85,10 +85,6 @@
 
 </template>
 
-
-
-
-
 <script setup>
 
 import '@/assets/gastos.css'
