@@ -38,15 +38,17 @@ h1 {
 
 /* 1. Definición de variables (Tema Light por defecto) */
 :root {
-  --bg-principal: #ffffff;
-  --texto-principal: #1a1a1a;
-  --borde-color: #cccccc;
-  --card-bg: #f8f8f8;
-  --accent-color: #007bff;
+  --bg-principal: #f8fafc;
+  --bg-principal-rgb: 248, 250, 252;
+  --texto-principal: #0f172a;
+  --borde-color: #e2e8f0;
+  --card-bg: #ffffff;
+  --accent-color: #3b82f6;
+  --accent-color-rgb: 59, 130, 246;
 
   --input-bg: #ffffff;
-  --input-text: #1a1a1a;
-  --input-border: #cccccc;
+  --input-text: #0f172a;
+  --input-border: #cbd5e1;
 
   /* Aliases para compatibilidad */
   --bg-color: var(--bg-principal);
@@ -56,46 +58,53 @@ h1 {
 
 /* 2. Variantes de temas */
 [data-theme='dark'] {
-  --bg-principal: #121212;
-  --texto-principal: #f5f5f5;
-  --borde-color: #444444;
-  --card-bg: #1e1e1e;
-  --accent-color: #3700b3;
+  --bg-principal: #0f172a;
+  --bg-principal-rgb: 15, 23, 42;
+  --texto-principal: #f1f5f9;
+  --borde-color: #1e293b;
+  --card-bg: #1e293b;
+  --accent-color: #3b82f6;
+  --accent-color-rgb: 59, 130, 246;
 
-  --input-bg: #2a2a2a;
-  --input-text: #f5f5f5;
-  --input-border: #555555;
+  --input-bg: #334155;
+  --input-text: #f1f5f9;
+  --input-border: #475569;
 }
 
 [data-theme='ocean'] {
-  --bg-principal: #001f3f;
-  --texto-principal: #e0f2f1;
-  --borde-color: #0074d9;
-  --card-bg: #003366;
-  --accent-color: #7fdbff;
+  --bg-principal: #082f49;
+  --bg-principal-rgb: 8, 47, 73;
+  --texto-principal: #e0f2fe;
+  --borde-color: #0c4a6e;
+  --card-bg: #0c4a6e;
+  --accent-color: #0ea5e9;
+  --accent-color-rgb: 14, 165, 233;
 
-  --input-bg: #002b55;
-  --input-text: #e0f2f1;
-  --input-border: #005bb7;
+  --input-bg: #075985;
+  --input-text: #e0f2fe;
+  --input-border: #0369a1;
 }
 
 [data-theme='forest'] {
-  --bg-principal: #1b3022;
-  --texto-principal: #e8f5e9;
-  --borde-color: #2e7d32;
-  --card-bg: #26402e;
-  --accent-color: #81c784;
+  --bg-principal: #064e3b;
+  --bg-principal-rgb: 6, 78, 59;
+  --texto-principal: #ecfdf5;
+  --borde-color: #065f46;
+  --card-bg: #065f46;
+  --accent-color: #10b981;
+  --accent-color-rgb: 16, 185, 129;
 
-  --input-bg: #203627;
-  --input-text: #e8f5e9;
-  --input-border: #25632a;
+  --input-bg: #065f46;
+  --input-text: #ecfdf5;
+  --input-border: #047857;
 }
 
 /* 3. Aplica las variables a tus selectores existentes */
 body {
   background-color: var(--bg-principal);
   color: var(--texto-principal);
-  /* Transición suave al cambiar de modo */
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
@@ -106,7 +115,17 @@ textarea {
   background-color: var(--input-bg) !important;
   color: var(--input-text) !important;
   border: 1px solid var(--input-border) !important;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 3px rgba(var(--accent-color-rgb), 0.2);
 }
 
 label,
@@ -119,18 +138,30 @@ p {
   transition: color 0.3s ease;
 }
 
-table {
-  color: var(--texto-principal);
+/* Glassmorphism Utility */
+.glass {
+  background: rgba(var(--bg-principal-rgb), 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-th {
-  background-color: var(--card-bg) !important;
-  color: var(--texto-principal) !important;
-  border-bottom: 2px solid var(--borde-color) !important;
+/* Scrollbar Moderno */
+::-webkit-scrollbar {
+  width: 8px;
 }
 
-td {
-  border-bottom: 1px solid var(--borde-color) !important;
+::-webkit-scrollbar-track {
+  background: var(--bg-principal);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--borde-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
 }
 
 /* Ejemplo de cómo usarlas en tus componentes actuales */
