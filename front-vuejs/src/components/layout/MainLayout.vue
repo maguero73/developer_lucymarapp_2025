@@ -4,7 +4,6 @@
     <aside class="sidebar" :class="{ collapsed: isCollapsed }">
       <div class="sidebar-header">
         <div class="logo">
-          <span class="logo-icon">🚀</span>
           <span v-if="!isCollapsed" class="logo-text">Lucymar App</span>
         </div>
         <button @click="isCollapsed = !isCollapsed" class="btn-toggle">

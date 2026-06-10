@@ -88,11 +88,13 @@
 <script setup>
 
 import '@/assets/gastos.css'
-import { ref, reactive, onMounted, watch } from 'vue'
-import api from '@/helpers/api';
+import { ref, reactive, onMounted, computed } from 'vue'
+import gastosApi from '@/controllers/gastos'
+import { useGastosStore } from '@/store/useGastosStore'
 
-const titulares = ref([])
-const tipos_gasto = ref([]) 
+const gastosStore = useGastosStore()
+const titulares = computed(() => gastosStore.titulares)
+const tipos_gasto = computed(() => gastosStore.tiposGasto)
 
 const error = ref('')
 const success = ref('')
@@ -105,31 +107,13 @@ const form = reactive({
   codigo_moneda: ''
 })
 
-const loading = ref(true)
+const loading = computed(() => gastosStore.loading)
 
 onMounted(async () => {
-  console.log('Montado: fetch titulares y tipos de gasto')
-  try {
-    const [res1, res2] = await Promise.all([
-
-    api.get('/titulares'),
-    api.get('/tipos-gasto')
-    ])
-
-    const data1 = res1.data
-    const data2 = res2.data
-
-    console.log('Titulares recibidos:', data1)
-    console.log('Tipos de gasto recibidos:', data2)
-
-    titulares.value = data1 || []
-    tipos_gasto.value = data2 || []
-
-  } catch (err) {
-    console.error('Error al cargar datos:', err)
-    error.value = 'Error al cargar datos'
-  } finally {
-    loading.value = false
+  console.log('Montado: fetch titulares y tipos de gasto via Modular Pinia')
+  await gastosStore.fetchInitialData()
+  if (gastosStore.error) {
+    error.value = gastosStore.error
   }
 })
 
@@ -180,27 +164,17 @@ const guardarGasto = async () => {
 
   console.log('Gasto que se enviará:', gasto)
 
-  // Enviar a la API
+  // Enviar a la API via Controller
   try {
-    
     console.log('Entrando en guardarGasto')
-    const response = await api.post('/gastos', gasto)
+    const response = await gastosApi.saveGasto(gasto)
     success.value = response.data.mensaje || 'Gasto guardado con éxito'
     alert('Gasto guardado con éxito')
-    
-
   } catch (err) {
     alert('Error al guardar gasto')
-  console.error('Error completo:', err)
-
-  // Si es error HTTP con Axios
-  if (err.response) {
-    console.log('Código de estado:', err.response.status)
-    console.log('Respuesta del servidor:', err.response.data)
+    console.error('Error completo:', err)
+    error.value = 'Error al guardar gasto'
   }
-
-  error.value = 'Error al guardar gasto'
-}
 }
 
 

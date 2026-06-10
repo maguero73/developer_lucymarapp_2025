@@ -60,13 +60,14 @@
 
 <script setup>
 import '@/assets/ingresos.css'
-import { reactive, ref, onMounted, watch } from 'vue'
-import api from '@/helpers/api';
+import { reactive, ref, onMounted, computed } from 'vue'
+import ingresosApi from '@/controllers/ingresos'
+import { useIngresosStore } from '@/store/useIngresosStore'
 
+const ingresosStore = useIngresosStore()
+const titulares = computed(() => ingresosStore.titulares)
+const tiposIngreso = computed(() => ingresosStore.tiposIngreso)
 
-const titulares = ref([])
-const tiposIngreso = ref([])
-const mensaje = ref('')
 const error = ref('')
 const success = ref('')
 
@@ -78,117 +79,77 @@ const formIngreso = reactive({
   monto: '',
   cod_moneda: ''
 })
-const loading = ref(true)
+
+const loading = computed(() => ingresosStore.loading)
 
 onMounted(async () => {
-  console.log('Montado: fetch titulares y tipos de ingreso')
-  try {
-    const [res1, res2] = await Promise.all([
-
-      api.get('/titulares'),
-      api.get('/tipos-ingreso')
-    ])
-
-    const data1 = res1.data
-    const data2 = res2.data
-
-    console.log('Titulares recibidos:', data1)
-    console.log('Tipos de ingreso recibidos:', data2)
-
-    titulares.value = data1 || []
-    tiposIngreso.value = data2 || []
-
-  } catch (err) {
-    console.error('Error al cargar datos:', err)
-  } finally {
-    loading.value = false
+  console.log('Montado: fetch titulares y tipos de ingreso via Modular Pinia')
+  await ingresosStore.fetchInitialData()
+  if (ingresosStore.error) {
+    error.value = ingresosStore.error
   }
 })
-
-
-
 
 //ACA INICIA LA FUNCION JAVASCRIPT GUARDAR INGRESO
 
 const guardarIngreso = async () => {
+  success.value = ''
+  error.value = ''
 
-success.value = ''
-error.value = ''
+  // Validaciones iniciales
+  if (
+    !formIngreso.cod_ingreso ||
+    !formIngreso.cod_titular ||
+    formIngreso.monto === '' ||
+    !formIngreso.fecha ||
+    !formIngreso.cod_moneda
+  ) {
+    alert('Por favor, complete todos los campos.')
+    return
+  }
 
-// Validaciones iniciales
-if (
-  !formIngreso.cod_ingreso ||
-  !formIngreso.cod_titular ||
-  formIngreso.monto === '' ||
-  !formIngreso.fecha ||
-  !formIngreso.cod_moneda
-) {
-  alert('Por favor, complete todos los campos.')
-  return
+  // Conversión segura de los campos numéricos
+  const cod_ingreso = Number(formIngreso.cod_ingreso)
+  const cod_titular = Number(formIngreso.cod_titular)
+  const monto = parseFloat(formIngreso.monto)
+  const tipo_cambio = 1200
+
+  const ingreso = {
+    cod_ingreso,
+    cod_titular,
+    monto,
+    fecha: new Date(formIngreso.fecha).toISOString(),
+    cod_moneda: formIngreso.cod_moneda,
+    tipo_cambio,
+    fecha_creacion: new Date().toISOString()
+  }
+
+  console.log('ingreso que se enviará:', ingreso)
+
+  // Enviar a la API via Controller
+  try {
+    console.log('Entrando en guardaringreso')
+    const response = await ingresosApi.saveIngreso(ingreso)
+    success.value = response.data.mensaje || 'Ingreso guardado correctamente'
+    alert('Ingreso guardado correctamente')
+  } catch (err) {
+    alert('Error al guardar ingreso')
+    console.error('Error completo:', err)
+    error.value = 'Error al guardar ingreso'
+  }
 }
-
-// Conversión segura de los campos numéricos
-const cod_ingreso = Number(formIngreso.cod_ingreso)
-const cod_titular = Number(formIngreso.cod_titular)
-const monto = parseFloat(formIngreso.monto)
-const tipo_cambio = 1200
-
-console.log('form.cod_titular:', formIngreso.cod_titular, typeof formIngreso.cod_titular)
-console.log('form.cod_ingreso:', formIngreso.cod_ingreso, typeof formIngreso.cod_ingreso)
-
-if (!formIngreso.cod_titular || !formIngreso.cod_ingreso) {
-  alert('Debe seleccionar un titular y un tipo de ingreso.')
-  return
-}
-
-const ingreso = {
-  cod_ingreso,
-  cod_titular,
-  monto,
-  fecha: new Date(formIngreso.fecha).toISOString(),
-  cod_moneda: formIngreso.cod_moneda,
-  tipo_cambio,
-  fecha_creacion: new Date().toISOString()
-}
-
-console.log('ingreso que se enviará:', ingreso)
-
-// Enviar a la API
-try {
-  
-  console.log('Entrando en guardaringreso')
-  const response = await api.post('/ingresos', ingreso)
-  success.value = response.data.mensaje || 'Ingreso guardado correctamente'
-  alert('Ingreso guardado correctamente')
-  
-
-} catch (err) {
-  alert('Error al guardar ingreso')
-console.error('Error completo:', err)
-
-// Si es error HTTP con Axios
-if (err.response) {
-  console.log('Código de estado:', err.response.status)
-  console.log('Respuesta del servidor:', err.response.data)
-}
-
-error.value = 'Error al guardar ingreso'
-}
-}
-
 
 function resetIngreso() {
-formIngreso.cod_titular = null
-formIngreso.cod_ingreso = null
-formIngreso.monto = 0
-formIngreso.fecha = ''
-formIngreso.cod_moneda = ''
-formIngreso.tipo_cambio = ''
+  formIngreso.cod_titular = null
+  formIngreso.cod_ingreso = null
+  formIngreso.monto = 0
+  formIngreso.fecha = ''
+  formIngreso.cod_moneda = ''
+  formIngreso.tipo_cambio = ''
 
-success.value = ''
-error.value = ''
+  success.value = ''
+  error.value = ''
 }
-
 </script>
 
 
