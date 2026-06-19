@@ -8,8 +8,8 @@ RUN node -v
 RUN echo "=== NPM ==="
 RUN npm -v
 
-# ---> ESTE ES EL CAMBIO: Actualiza npm para corregir el error 'Exit handler' <---
-RUN npm install -g npm@latest
+# ---> CAMBIO AQUÍ: Forzamos la versión 10 estable compatible con Node 18 <---
+RUN npm install -g npm@10.9.2
 
 RUN echo "=== PROXY ==="
 RUN env | grep -i proxy || true
