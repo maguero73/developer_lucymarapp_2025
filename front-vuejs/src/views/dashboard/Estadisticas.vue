@@ -85,33 +85,26 @@
 
 <script setup>
 import '@/assets/estadisticas.css'
-import { ref, onMounted } from 'vue'
-import api from '@/helpers/api'
+import { ref, onMounted, computed } from 'vue'
+import { useEstadisticasStore } from '@/store/useEstadisticasStore'
+
+const estadisticasStore = useEstadisticasStore()
 
 const resultado = ref(null)
 const anioSeleccionado = ref("")
-const loading = ref(false)
 const hasQueried = ref(false)
-const anios = ref([])
 
-const titulares = ref([])
-const tiposGasto = ref([])
+const titulares = computed(() => estadisticasStore.titulares)
+const tiposGasto = computed(() => estadisticasStore.tiposGasto)
+const anios = computed(() => estadisticasStore.anios)
+const loading = computed(() => estadisticasStore.loading)
+
 const codTitular = ref(0)
 const codGasto = ref(0)
 
 onMounted(async () => {
-  try {
-    const [resTitulares, resTipos, resAnios] = await Promise.all([
-      api.get('/titulares'),
-      api.get('/tipos-gasto'),
-      api.get('/reportes/anios')
-    ])
-    titulares.value = resTitulares.data || []
-    tiposGasto.value = resTipos.data || []
-    anios.value = resAnios.data || []
-  } catch (error) {
-    console.error("Error al cargar filtros:", error)
-  }
+  console.log('Montado: fetch filtros de estadísticas via Modular Pinia')
+  await estadisticasStore.fetchInitialData()
 })
 
 const fetchData = async () => {
@@ -120,19 +113,16 @@ const fetchData = async () => {
     return
   }
 
-  loading.value = true
   resultado.value = null
   hasQueried.value = false
 
   try {
-    const response = await api.get('/reportes/gastos-anuales', {
-      params: {
-        cod_titular: codTitular.value,
-        cod_gasto: codGasto.value
-      }
+    await estadisticasStore.fetchReportData({
+      cod_titular: codTitular.value,
+      cod_gasto: codGasto.value
     })
     
-    const dataForYear = response.data.find(item => item.anio === parseInt(anioSeleccionado.value))
+    const dataForYear = estadisticasStore.reporteData.find(item => item.anio === parseInt(anioSeleccionado.value))
     
     if (dataForYear) {
       resultado.value = dataForYear
@@ -143,8 +133,6 @@ const fetchData = async () => {
   } catch (error) {
     console.error("Error al obtener datos:", error)
     alert("No se pudieron obtener los datos del reporte anual")
-  } finally {
-    loading.value = false
   }
 }
 
@@ -162,190 +150,3 @@ const formatCurrency = (value) => {
 }
 </script>
 
-<style scoped>
-.header-section {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.subtitle {
-  color: var(--texto-principal);
-  opacity: 0.7;
-  font-size: 0.95rem;
-}
-
-.filtros-container {
-  background: var(--card-bg);
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--borde-color);
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.filtros-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  align-items: end;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group label {
-  font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--accent-color, #3b82f6);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.form-select {
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: 1px solid var(--input-border);
-  background-color: var(--input-bg);
-  color: var(--input-text);
-  width: 100%;
-}
-
-.btn-consultar {
-  width: 100%;
-  padding: 0.7rem;
-  border-radius: 8px;
-  border: none;
-  background: linear-gradient(135deg, #198754 0%, #157347 100%);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-consultar:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
-}
-
-.btn-consultar:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.resultados-card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  border: 1px solid var(--borde-color);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-  animation: slideUp 0.4s ease-out;
-}
-
-.card-header {
-  background: rgba(var(--bg-principal-rgb), 0.3);
-  padding: 1.5rem;
-  text-align: center;
-  border-bottom: 1px solid var(--borde-color);
-}
-
-.card-header h4 {
-  margin: 0;
-  color: var(--texto-principal);
-}
-
-.card-header p {
-  margin: 0.5rem 0 0;
-  font-size: 0.85rem;
-  color: var(--texto-principal);
-  opacity: 0.6;
-}
-
-.stats-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.stats-table th {
-  background: var(--texto-principal);
-  color: var(--bg-principal);
-  padding: 1rem;
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-.stats-table td {
-  padding: 1.2rem;
-  text-align: center;
-  border-bottom: 1px solid var(--borde-color);
-  color: var(--texto-principal);
-}
-
-.monto-total {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: #198754;
-}
-
-.no-results-msg {
-  text-align: center;
-  padding: 2rem;
-  background: rgba(255, 243, 205, 0.1);
-  border: 1px solid #ffeeba;
-  border-radius: 12px;
-  color: var(--texto-principal);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.info-icon {
-  width: 30px;
-  height: 30px;
-  background: #856404;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-style: normal;
-}
-
-.loader {
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s;
-}
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-}
-
-@media (max-width: 768px) {
-  .filtros-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>

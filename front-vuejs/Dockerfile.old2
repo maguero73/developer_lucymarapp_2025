@@ -1,5 +1,5 @@
 FROM node:18 AS build
-  
+
 WORKDIR /app
 
 RUN echo "=== NODE ==="
@@ -7,9 +7,6 @@ RUN node -v
 
 RUN echo "=== NPM ==="
 RUN npm -v
-
-# ---> ESTE ES EL CAMBIO: Actualiza npm para corregir el error 'Exit handler' <---
-RUN npm install -g npm@latest
 
 RUN echo "=== PROXY ==="
 RUN env | grep -i proxy || true
@@ -38,4 +35,3 @@ COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-

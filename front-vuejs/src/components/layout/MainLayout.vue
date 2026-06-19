@@ -16,9 +16,9 @@
           <span class="nav-icon">🏠</span>
           <span v-if="!isCollapsed" class="nav-text">Inicio</span>
         </router-link>
-        <router-link to="/gastos" class="nav-item" title="Control de Gastos">
+        <router-link to="/finanzas" class="nav-item" title="Gestión de Finanzas">
           <span class="nav-icon">💰</span>
-          <span v-if="!isCollapsed" class="nav-text">Gastos</span>
+          <span v-if="!isCollapsed" class="nav-text">Finanzas</span>
         </router-link>
         <router-link to="/estudio" class="nav-item" title="Control de Estudio">
           <span class="nav-icon">📚</span>
@@ -93,7 +93,7 @@ const currentTheme = ref('light')
 const currentPageTitle = computed(() => {
   switch (route.path) {
     case '/home': return 'Panel de Control'
-    case '/gastos': return 'Control de Gastos'
+    case '/finanzas': return 'Gestión Financiera'
     case '/estudio': return 'Control de Estudio'
     default: return 'Lucymar App'
   }

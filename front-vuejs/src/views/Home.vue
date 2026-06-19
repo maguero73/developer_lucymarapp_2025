@@ -6,11 +6,11 @@
     </div>
 
     <div class="modules-grid">
-      <!-- Módulo Control de Gastos -->
-      <router-link to="/gastos" class="module-card gastos">
+      <!-- Módulo de Gestión Financiera -->
+      <router-link to="/finanzas" class="module-card gastos">
         <div class="card-content">
           <div class="icon-wrapper">💰</div>
-          <h3>Gastos</h3>
+          <h3>Gestión Financiera</h3>
           <p>Gestiona tus ingresos, gastos y visualiza estadísticas detalladas.</p>
           <span class="btn-enter">Entrar →</span>
         </div>

@@ -13,7 +13,7 @@ const routes = [
     component: MainLayout,
     children: [
       { path: 'home', name: 'home', component: Home },
-      { path: 'gastos', name: 'gastos', component: GastosDashboard },
+      { path: 'finanzas', name: 'finanzas', component: GastosDashboard },
       { path: 'estudio', name: 'estudio', component: EstudioDashboard },
     ]
   },
