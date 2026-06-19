@@ -52,9 +52,62 @@ def reporte_ultimo_gasto(cod_titular: int, db:Session=Depends(get_db)):
 
 # --- ENDPOINTS DE INGRESOS ---
 
+
 @router.get("/api/reportes/ingresos-mensuales")
 def reporte_ingresos_mensuales(anio: int, mes: int, db: Session = Depends(get_db)):
     """
     Devuelve los ingresos de un mes específico.
     """
     return db_lm_ingreso.get_ingresos_del_mes(db, anio, mes)
+
+
+@router.get("/api/reportes/gastos-anuales")
+def reporte_gastos_anuales(
+    cod_titular: int = 0,
+    cod_gasto: int = 0,
+    db: Session = Depends(get_db)
+):
+
+    try:
+
+        resultados = db_lm_gasto.get_gastos_anuales(
+            session=db,
+            cod_titular=cod_titular,
+            cod_gasto=cod_gasto
+        )
+
+        return [
+            {
+                "anio": int(r.anio),
+                "total": float(r.total)
+            }
+            for r in resultados
+        ]
+
+    except Exception as e:
+        print("🔥 ERROR en reporte_gastos_anuales:", e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+#----------------------------------------------------
+
+#OBTENGO LOS AÑOS DE LA BD
+
+
+@router.get("/api/reportes/anios")
+def reporte_anios(db: Session = Depends(get_db)):
+    try:
+
+        resultados = db_lm_gasto.get_anios(db)
+
+        return [int(r.anio) for r in resultados]
+
+    except Exception as e:
+        print("🔥 ERROR en reporte_anios:", e)
+
+        import traceback
+        traceback.print_exc()
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, Numeric, DateTime, String, Float
 from app.core.database import DBBase
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 from sqlalchemy.orm import Session
 
 ARG_TZ = timezone(timedelta(hours=-3))  # UTC-3 Argentina
@@ -56,3 +56,33 @@ def get_ingresos_del_mes(session: Session, anio: int, mes: int):
         DBLMIngreso.fecha >= fecha_inicio,
         DBLMIngreso.fecha < fecha_fin
     ).all()
+
+#------------------------------------------------------------------------
+
+def get_ingresos_filtrados(
+    session: Session, fecha_desde: date = None, fecha_hasta: date = None,
+    cod_titular: list[int] = None, cod_ingreso: list[int] = None, 
+    codigo_moneda: str = None
+):
+    """
+    Construye una query dinámica aplicando filtros solo si se proporcionan.
+    """
+    query = session.query(DBLMIngreso)
+
+    if fecha_desde:
+        query = query.filter(DBLMIngreso.fecha >= fecha_desde)
+    
+    if fecha_hasta:
+        query = query.filter(DBLMIngreso.fecha <= fecha_hasta)
+
+    if cod_titular:
+        # Si es una lista, usamos IN
+        query = query.filter(DBLMIngreso.cod_titular.in_(cod_titular))
+    
+    if cod_ingreso:
+        query = query.filter(DBLMIngreso.cod_gasto.in_(cod_ingreso))
+
+    if codigo_moneda:
+        query = query.filter(DBLMIngreso.codigo_moneda == codigo_moneda)
+
+    return query.all()

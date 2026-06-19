@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Numeric, DateTime, String, Float
+from sqlalchemy import Column, Integer, Numeric, DateTime, String, Float, func, extract
 from app.core.database import DBBase
 from datetime import datetime, timedelta, timezone, date
 from sqlalchemy.orm import Session
@@ -117,3 +117,45 @@ def get_gastos_filtrados(
         query = query.filter(DBLMGasto.codigo_moneda == codigo_moneda)
 
     return query.all()
+
+#-----------------------------------------------------------------------------
+def get_gastos_anuales(
+    session: Session,
+    cod_titular: int = 0,
+    cod_gasto: int = 0
+):
+
+    query = session.query(
+        extract('year', DBLMGasto.fecha).label('anio'),
+        func.sum(DBLMGasto.monto).label('total')
+    )
+
+    if cod_titular != 0:
+        query = query.filter(
+            DBLMGasto.cod_titular == cod_titular
+        )
+
+    if cod_gasto != 0:
+        query = query.filter(
+            DBLMGasto.cod_gasto == cod_gasto
+        )
+
+    return (
+        query
+        .group_by(extract('year', DBLMGasto.fecha))
+        .order_by(extract('year', DBLMGasto.fecha))
+        .all()
+    )
+
+
+#-----------------------------------------------------------------------------
+def get_anios(session: Session):
+
+    return (
+        session.query(
+            extract('year', DBLMGasto.fecha).label('anio')
+        )
+        .distinct()
+        .order_by('anio')
+        .all()
+    )

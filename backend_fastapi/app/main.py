@@ -10,7 +10,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 #from app.endpoints import titulares
 #from app.endpoints import tipo_gasto
-from app.routers import gasto_router, ingreso_router, auth_router, consolidado_gastos, titulares_router, tipos_gasto_router, tipos_ingreso_router, reportes_negocio
+from app.routers import gasto_router, ingreso_router, auth_router, consolidado_gastos, consolidado_ingresos, titulares_router, tipos_gasto_router, tipos_ingreso_router, reportes_negocio
 #from app.endpoints import tipo_ingreso
 from app.middlewares.audit_middleware_auth import JWTMiddleware
 
@@ -50,7 +50,9 @@ app.include_router(tipos_gasto_router.router, tags=["Gastos"]) #dependencies=[De
 app.include_router(ingreso_router.router, tags=["Ingresos"])#dependencies=[Depends(bearer_scheme)])
 app.include_router(tipos_ingreso_router.router, tags=["Ingresos"])#dependencies=[Depends(bearer_scheme)])
 app.include_router(consolidado_gastos.router, tags=["Gastos"])#dependencies=[Depends(bearer_scheme)])
-app.include_router(reportes_negocio.router, tags=["Reportes"])
+app.include_router(consolidado_ingresos.router, tags=["Ingresos"])#dependencies=[Depends(bearer_scheme)])
+app.include_router(reportes_negocio.router, tags=["Reportes"])#dependencies=[Depends(bearer_scheme)])
+
 
 
 #------------------------Auths Login-------------------------------------------

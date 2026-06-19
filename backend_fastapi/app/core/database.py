@@ -11,13 +11,14 @@ import os
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "3306")
 DB_USER = os.getenv("DB_USER", "root")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "pass")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "Dimaria123")
 DB_NAME = os.getenv("DB_NAME", "lucymar_db")
 
 SQLALCHEMY_DATABASE_URL = (
     f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}"
     f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
+
 
 #CREAR EL MOTOR (engine)
 engine=create_engine(
@@ -26,6 +27,11 @@ engine=create_engine(
     pool_pre_ping=True,
     pool_recycle=3600
 )
+
+
+#engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+
 
 #CREAR UNA SESION LOCAL PARA USAR EN CADA REQUEST
 
